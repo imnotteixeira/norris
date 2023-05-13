@@ -2,6 +2,7 @@ import { RequestHandler, Router } from "express";
 import { IRouteHandler, PageHandler } from ".";
 import fetch from 'node-fetch';
 import Container, { Inject, Service } from "typedi";
+import { AppConfig } from "../module";
 
 const router = Router();
 
@@ -10,12 +11,12 @@ class AuthHandler implements IRouteHandler {
     
     @Inject("DEFAULT_PAGE_PROPS")
     defaultPageProps: Record<string, any>;
+    
+    @Inject("APP_CONFIG")
+    appConfig: AppConfig;
 
     constructor() {}
 
-    STRAVA_CLIENT_ID = "GET_THIS_FROM_ENV";
-    STRAVA_CLIENT_SECRET = "GET_THIS_FROM_ENV"
-    
     handle: RequestHandler = async (req, res) => {
         // TODO: Should we really be storing this directly in the client?
         // TODO more secure cookie settings
@@ -26,8 +27,8 @@ class AuthHandler implements IRouteHandler {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                client_id: this.STRAVA_CLIENT_ID,
-                client_secret: this.STRAVA_CLIENT_SECRET,
+                client_id: this.appConfig.STRAVA_CLIENT_ID,
+                client_secret: this.appConfig.STRAVA_CLIENT_SECRET,
                 grant_type: "authorization_code",
                 code: req.query.code
             })
