@@ -3,7 +3,6 @@ import homePageHandler from "./home"
 import authPageHandler from "./auth"
 import dashboardPageHandler from "./dashboard"
 import { PageId, PageType } from "../../shared/constants";
-import { AppContext } from "../../shared";
 
 export type PageHandler = (router: Router) => void
 
@@ -16,7 +15,6 @@ export interface DefaultPageProps {
     reactDomVersion: string,
     suffix: string,
     containerId: string,
-    body: (options: AppContext) => string,
     assetsPath: string
 }
 export interface PageData<T extends PageContext> {
@@ -25,7 +23,8 @@ export interface PageData<T extends PageContext> {
     context: T
 }
 export interface RenderPageData<T extends PageContext> {
-    defaultPageProps: DefaultPageProps
+    defaultPageProps: DefaultPageProps,
+    body: string,
     context: T
 }
 

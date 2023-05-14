@@ -9,14 +9,14 @@ export default (isProd: boolean, assetsPort: string) => {
 
     const suffix = isProd ? '.production.min.js' : '.development.js';
     
-    const assetsPath = `http://localhost:${assetsPort}`; // TODO: Maybe this needs changing for production
+    // const assetsPath = `http://localhost:${assetsPort}`; // TODO: Maybe this needs changing for production
+    const assetsPath = `https://6b09-2-153-89-31.ngrok-free.app`; // TODO: Maybe this needs changing for production
 
     const defaultPageProps: DefaultPageProps = {
         reactVersion,
         reactDomVersion,
         suffix,
         containerId,
-        body: ssrEntryPoint,
         assetsPath
     }
 

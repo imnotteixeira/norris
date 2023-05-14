@@ -2,11 +2,8 @@
 
 import { SummaryActivity } from "../server/model/Activity"
 import { PageContext } from "../server/pages"
-import { PageType } from "./constants"
 
-interface AppContext {
-    pageType: PageType
-}
+export {PageContext as PageContext} from "../server/pages"
 
 export interface HomePageContext extends PageContext {}
 export interface DashboardPageContext extends PageContext {

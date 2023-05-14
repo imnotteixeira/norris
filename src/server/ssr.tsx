@@ -5,7 +5,7 @@
 import { renderToString } from "react-dom/server";
 import React from "react"
 import App from "../client/components/app";
-import { AppContext } from "../shared";
+import { PageContext } from "./pages";
 
 
-export default (options: AppContext) => renderToString(<App {...options}  />);
+export default (options: PageContext) => renderToString(<App {...options}  />);

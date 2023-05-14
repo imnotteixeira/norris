@@ -1,5 +1,5 @@
 # First, building the static files
-FROM node:14.18.3-alpine as build
+FROM node:16.20.0-alpine as build
 
 WORKDIR /usr/src/app
 COPY package.json package-lock.json tsconfig.json assets.webpack.config.js ./

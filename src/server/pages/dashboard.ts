@@ -6,6 +6,7 @@ import StravaService from "../service/strava";
 import Activity, { SummaryActivity } from "../model/Activity";
 import adaptActivity, { adaptSummaryActivity } from "../adapter/Activity"
 import { DashboardPageContext } from "../../shared";
+import ssrEntryPoint from "../ssr";
 
 const router = Router();
 
@@ -378,9 +379,12 @@ const registerer: PageHandler = (app: Router) => {
     router.get("/", async (req: any, res: PageResponse, next: any) => {
         const pageResponseData = await Container.get(DashboardHandler).handle(req);
 
+        const pageContext = pageResponseData.context;
+
         res.render(pageResponseData.pageId, {
             defaultPageProps: pageResponseData.defaultPageProps,
-            context: JSON.stringify(pageResponseData.context)
+            body: ssrEntryPoint(pageContext),
+            context: JSON.stringify(pageContext)
         })
     })
 

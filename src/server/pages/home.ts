@@ -1,8 +1,9 @@
-import { RequestHandler, Router } from "express";
+import { Router } from "express";
 import Container, { Inject, Service } from "typedi";
 import { DefaultPageProps, IRouteRenderHandler, PageData, PageHandler, PageResponse, SyncPageRequestHandler } from ".";
 import { HomePageContext } from "../../shared";
 import { PageId, PageType } from "../../shared/constants";
+import ssrEntryPoint from "../ssr"
 
 const router = Router();
 @Service()
@@ -34,9 +35,12 @@ const registerer: PageHandler = (app: Router) => {
     router.get("/", (req: any, res: PageResponse, next: any) => {
         const pageResponseData = Container.get(HomeHandler).handle(req);
 
+        const pageContext = pageResponseData.context
+
         res.render(pageResponseData.pageId, {
             defaultPageProps: pageResponseData.defaultPageProps,
-            context: JSON.stringify(pageResponseData.context)
+            body: ssrEntryPoint(pageContext),
+            context: JSON.stringify(pageContext)
         })
     })
 

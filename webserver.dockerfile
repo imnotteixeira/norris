@@ -1,7 +1,7 @@
 # This Dockerfile is made to be built with the context one folder above this one 
 # so as to contain the coliseo (engine, dependency) folder in its reach as well
 
-FROM node:14.18.3-alpine as build
+FROM node:16.20.0-alpine as build
 
 ARG WEBSERVER_DIR
 ARG PORT

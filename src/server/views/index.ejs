@@ -12,7 +12,7 @@
 </head>
 <body>
     <!-- The body will initially be the server-side rendered version of the app, which is later hydrated -->
-    <div id="<%= defaultPageProps.containerId %>"><%- defaultPageProps.body %></div>
+    <div id="<%= defaultPageProps.containerId %>"><%- body %></div>
     <script src="https://unpkg.com/react@<%= defaultPageProps.reactVersion %>/umd/react<%= defaultPageProps.suffix %>"></script>
     <script src="https://unpkg.com/react-dom@<%= defaultPageProps.reactDomVersion %>/umd/react-dom<%= defaultPageProps.suffix %>"></script>
     <script src="<%= defaultPageProps.assetsPath %>/bundle.js"></script>

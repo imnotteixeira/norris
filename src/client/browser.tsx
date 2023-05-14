@@ -5,10 +5,10 @@ import * as React from 'react';
 import { hydrate } from 'react-dom';
 import App from './components/app';
 import { containerId } from '../shared/constants';
-import { AppContext } from '../shared';
+import { PageContext } from '../shared';
 
 declare global {
-    interface Window { __APP_CONTEXT__: AppContext }
+    interface Window { __APP_CONTEXT__: PageContext }
 }
 
 const context = window.__APP_CONTEXT__
