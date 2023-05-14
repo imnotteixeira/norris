@@ -3,6 +3,7 @@ import { version as reactVersion } from 'react';
 import { version as reactDomVersion } from 'react-dom/server';
 import { containerId } from '../../shared/constants';
 import ssrEntryPoint from '../ssr';
+import { DefaultPageProps } from "../pages";
 
 export default (isProd: boolean, assetsPort: string) => {
 
@@ -10,7 +11,7 @@ export default (isProd: boolean, assetsPort: string) => {
     
     const assetsPath = `http://localhost:${assetsPort}`; // TODO: Maybe this needs changing for production
 
-    const defaultPageProps = {
+    const defaultPageProps: DefaultPageProps = {
         reactVersion,
         reactDomVersion,
         suffix,

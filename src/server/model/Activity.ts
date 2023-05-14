@@ -2,6 +2,7 @@ import { Length, Time, Velocity } from "safe-units";
 import ActivityType from "./ActivityType";
 import { MetaAthlete } from "./Athlete";
 import Lap from "./Lap";
+import LatLng from "./LatLng";
 import PolylineMap from "./PolylineMap";
 import ResourceState from "./ResourceState";
 import SegmentEffort from "./SegmentEffort";
@@ -11,6 +12,55 @@ import SportType from "./SportType";
 export interface MetaActivity {
     id: number,
     resource_state?: ResourceState.Meta,
+}
+
+export interface SummaryActivity {
+    id: number,
+    resource_state?: ResourceState.Summary,
+    athlete: MetaAthlete,
+    name: string,
+    distance: Length,
+    moving_time: Time,
+    elapsed_time: Time,
+    total_elevation_gain: Length,
+    type: string,
+    sport_type: SportType,
+    start_date: Date,
+    start_date_local: Date,
+    timezone: string,
+    utc_offset: number,
+    location_city: string | null,
+    location_state: string | null,
+    location_country: string | null,
+    achievement_count: number,
+    kudos_count: number,
+    comment_count: number,
+    athlete_count: number,
+    photo_count: number,
+    map: PolylineMap,
+    trainer: boolean,
+    commute: boolean,
+    manual: boolean,
+    private: boolean,
+    visibility: string,
+    flagged: boolean,
+    gear_id: string | null,
+    start_latlng: LatLng,
+    end_latlng: LatLng,
+    average_speed: Velocity,
+    max_speed: Velocity,
+    has_heartrate: boolean,
+    heartrate_opt_out: boolean,
+    display_hide_heartrate_option: boolean,
+    elev_high: Length,
+    elev_low: Length,
+    upload_id: number,
+    upload_id_str: string,
+    external_id: string,
+    from_accepted_tag: boolean,
+    pr_count: number,
+    total_photo_count: number,
+    has_kudoed: boolean
 }
 
 export default interface Activity {

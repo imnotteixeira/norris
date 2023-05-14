@@ -1,5 +1,5 @@
 import { Measure, meters, seconds } from "safe-units";
-import Activity, { MetaActivity } from "../model/Activity";
+import Activity, { MetaActivity, SummaryActivity } from "../model/Activity";
 import ResourceState from "../model/ResourceState";
 import ActivityType from "../model/ActivityType";
 import SportType from "../model/SportType";
@@ -99,6 +99,55 @@ interface MetaActivitySource {
     resource_state?: string
 }
 
+interface SummaryActivitySource {
+    id: number,
+    resource_state?: number,
+    athlete: unknown,
+    name: string,
+    distance: number,
+    moving_time: number,
+    elapsed_time: number,
+    total_elevation_gain: number,
+    type: string,
+    sport_type: unknown,
+    start_date: string,
+    start_date_local: string,
+    timezone: string,
+    utc_offset: number,
+    location_city: string | null,
+    location_state: string | null,
+    location_country: string | null,
+    achievement_count: number,
+    kudos_count: number,
+    comment_count: number,
+    athlete_count: number,
+    photo_count: number,
+    map: unknown,
+    trainer: boolean,
+    commute: boolean,
+    manual: boolean,
+    private: boolean,
+    visibility: string,
+    flagged: boolean,
+    gear_id: string | null,
+    start_latlng: [ number, number ],
+    end_latlng: [ number, number ],
+    average_speed: number,
+    max_speed: number,
+    has_heartrate: boolean,
+    heartrate_opt_out: boolean,
+    display_hide_heartrate_option: boolean,
+    elev_high: number,
+    elev_low: number,
+    upload_id: number,
+    upload_id_str: string,
+    external_id: string,
+    from_accepted_tag: boolean,
+    pr_count: number,
+    total_photo_count: number,
+    has_kudoed: boolean
+}
+
 const adaptSimilarActivities = (source: any) => {
     console.warn("MISSING IMPLEMENTATION FOR adaptSimilarActivities()")
     return {
@@ -190,6 +239,55 @@ const adapt = (source: ActivitySource): Activity => ({
 export const adaptMetaActivity = (source: MetaActivitySource): MetaActivity => ({
     id: source.id,
     resource_state: ResourceState.Meta
+})
+
+export const adaptSummaryActivity = (source: SummaryActivitySource): SummaryActivity => ({
+    id: source.id,
+    resource_state: source.resource_state,
+    athlete: adaptMetaAthlete(source.athlete as any),
+    name: source.name,
+    distance: Measure.of(source.distance, meters),
+    moving_time: Measure.of(source.moving_time, seconds),
+    elapsed_time: Measure.of(source.elapsed_time, seconds),
+    total_elevation_gain: Measure.of(source.total_elevation_gain, meters),
+    type: source.type,
+    sport_type: adaptSportType(source.sport_type as string | undefined) ?? SportType.UNKNOWN,
+    start_date: new Date(source.start_date),
+    start_date_local: new Date(source.start_date_local),
+    timezone: source.timezone,
+    utc_offset: source.utc_offset,
+    location_city: source.location_city,
+    location_state: source.location_state,
+    location_country: source.location_country,
+    achievement_count: source.achievement_count,
+    kudos_count: source.kudos_count,
+    comment_count: source.comment_count,
+    athlete_count: source.athlete_count,
+    photo_count: source.photo_count,
+    map: adaptMap(source.map as any),
+    trainer: source.trainer,
+    commute: source.commute,
+    manual: source.manual,
+    private: source.private,
+    visibility: source.visibility,
+    flagged: source.flagged,
+    gear_id: source.gear_id,
+    start_latlng: source.start_latlng,
+    end_latlng: source.end_latlng,
+    average_speed: Measure.of(source.average_speed, meters.per(seconds)),
+    max_speed: Measure.of(source.max_speed, meters.per(seconds)),
+    has_heartrate: source.has_heartrate,
+    heartrate_opt_out: source.heartrate_opt_out,
+    display_hide_heartrate_option: source.display_hide_heartrate_option,
+    elev_high: Measure.of(source.elev_high, meters),
+    elev_low: Measure.of(source.elev_low, meters),
+    upload_id: source.upload_id,
+    upload_id_str: source.upload_id_str,
+    external_id: source.external_id,
+    from_accepted_tag: source.from_accepted_tag,
+    pr_count: source.pr_count,
+    total_photo_count: source.total_photo_count,
+    has_kudoed: source.has_kudoed,
 })
 
 export default adapt;

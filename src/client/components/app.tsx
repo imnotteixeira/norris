@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { AppContext } from '../../shared';
+import { AppContext, DashboardPageContext } from '../../shared';
+import { PageType } from '../../shared/constants';
+import DashboardContent from './DashboardContent';
 
 const STRAVA_CLIENT_ID = "100410";
 // This needs to be allowlisted in the strava app settings
@@ -19,8 +21,9 @@ const App: React.FC<AppContext> = (props) => {
 
     return (
         <div>
-            <h1>This should be a {props.pageId} page</h1>
-            <a href={STRAVA_OAUTH_URL}>Connect Strava Account</a>
+            <h1>This should be a {props.pageType} page</h1>
+            {props.pageType === PageType.HOME && <a href={STRAVA_OAUTH_URL}>Connect Strava Account</a>}
+            {props.pageType === PageType.DASHBOARD && <DashboardContent {...props as DashboardPageContext}/>}
         </div>
     );
 }

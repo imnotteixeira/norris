@@ -1,9 +1,11 @@
 export const containerId = 'content';
 
-export const Pages = {
-    HOME: "HOME",
-    OAUTH_REDIRECT: "OAUTH_REDIRECT",
-    DASHBOARD: "DASHBOARD",
+export enum PageId {
+    INDEX = "index",
 }
 
-export type PageId = keyof typeof Pages;
+export enum PageType {
+    HOME = "HOME",
+    OAUTH_REDIRECT = "OAUTH_REDIRECT",
+    DASHBOARD = "DASHBOARD",
+}

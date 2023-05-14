@@ -1,11 +1,11 @@
 import Container, { Inject, Service } from "typedi"
-import { Router, RequestHandler } from "express";
-import { IRouteHandler, PageHandler } from ".";
-import { Pages } from "../../shared/constants";
+import { Router } from "express";
+import { AsyncPageRequestHandler, DefaultPageProps, IRouteRenderHandler, PageData, PageHandler, PageResponse } from ".";
+import { PageId, PageType } from "../../shared/constants";
 import StravaService from "../service/strava";
-import Activity from "../model/Activity";
-import adaptActivity from "../adapter/Activity"
-import { Measure, yards } from "safe-units";
+import Activity, { SummaryActivity } from "../model/Activity";
+import adaptActivity, { adaptSummaryActivity } from "../adapter/Activity"
+import { DashboardPageContext } from "../../shared";
 
 const router = Router();
 
@@ -334,44 +334,56 @@ const dummyActivity: Activity = adaptActivity({
       resource_state: 2
     },
     available_zones: []
-  })
-  
+})
 
 @Service()
-class DashboardHandler implements IRouteHandler {
+class DashboardHandler implements IRouteRenderHandler<DashboardPageContext> {
     
     @Inject("DEFAULT_PAGE_PROPS")
-    defaultPageProps: Record<string, any>;
+    defaultPageProps: DefaultPageProps;
 
     constructor(
         public stravaService: StravaService
     ) {}
     
-    handle: RequestHandler = async (req, res) => {
+    handle: AsyncPageRequestHandler<DashboardPageContext> = async (req): Promise<PageData<DashboardPageContext>> => {
         const accessToken = req.cookies["strava-oauth-token"];
         // console.info("ACTIVITIES", await this.stravaService.getActivities(accessToken))
         // console.info("THAT ONE ACTIVITY RAW", await this.stravaService.getActivity(accessToken, "8469902820"))
-        const thatOneActivity = adaptActivity(await this.stravaService.getActivity(accessToken, "8469902820"))
-        console.info("THAT ONE ACTIVITY", thatOneActivity)
+        // const thatOneActivity = adaptActivity(await this.stravaService.getActivity(accessToken, "8469902820"))
+        // console.info("THAT ONE ACTIVITY", thatOneActivity)
 
-        console.info("Distance in meters", thatOneActivity.distance)
-        console.info("Distance in yards", thatOneActivity.distance.in(yards))
+        // console.info("Distance in meters", thatOneActivity.distance)
+        // console.info("Distance in yards", thatOneActivity.distance.in(yards))
+
+        const activitiesData: SummaryActivity[] = (await this.stravaService.getActivities(accessToken))
+            .map(adaptSummaryActivity);
 
         // const oneActivity = dummyActivity;
-
-        res.render("index", {
-            ...this.defaultPageProps,
-            context: JSON.stringify({
-                pageId: Pages.DASHBOARD
-            })
-        })
+        
+        return {
+            pageId: PageId.INDEX,
+            defaultPageProps: this.defaultPageProps,
+            context: {
+                pageType: PageType.DASHBOARD,
+                activitiesData
+            }
+        }
     }
 }
 
 const registerer: PageHandler = (app: Router) => {
     app.use("/dashboard", router);
 
-    router.get("/", Container.get(DashboardHandler).handle);
-};
+    router.get("/", async (req: any, res: PageResponse, next: any) => {
+        const pageResponseData = await Container.get(DashboardHandler).handle(req);
+
+        res.render(pageResponseData.pageId, {
+            defaultPageProps: pageResponseData.defaultPageProps,
+            context: JSON.stringify(pageResponseData.context)
+        })
+    })
+
+}
 
 export default registerer;

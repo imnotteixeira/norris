@@ -1,13 +1,14 @@
 import { RequestHandler, Router } from "express";
-import { IRouteHandler, PageHandler } from ".";
+import { AsyncPageRequestHandler, AsyncRedirectHandler, IRouteRedirectHandler, PageContext, PageHandler } from ".";
 import fetch from 'node-fetch';
 import Container, { Inject, Service } from "typedi";
 import { AppConfig } from "../module";
 
 const router = Router();
 
+interface AuthPageContext extends PageContext {}
 @Service()
-class AuthHandler implements IRouteHandler {
+class AuthHandler implements IRouteRedirectHandler {
     
     @Inject("DEFAULT_PAGE_PROPS")
     defaultPageProps: Record<string, any>;
@@ -16,8 +17,7 @@ class AuthHandler implements IRouteHandler {
     appConfig: AppConfig;
 
     constructor() {}
-
-    handle: RequestHandler = async (req, res) => {
+    handle: AsyncRedirectHandler = async (req, res) => {
         // TODO: Should we really be storing this directly in the client?
         // TODO more secure cookie settings
         // TODO CSRF?
